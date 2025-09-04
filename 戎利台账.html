@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雄安新兴戎利运管部智能台账仪表盘</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+        }
+        .header-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .search-container {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .kpi-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        .kpi-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .kpi-label {
+            color: #6c757d;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        .contract-link {
+            color: #667eea;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .contract-link:hover {
+            text-decoration: underline;
+        }
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+        .btn-primary {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+        .btn-primary:hover {
+            background-color: #5a6fd8;
+            border-color: #5a6fd8;
+        }
+        .nav-tabs .nav-link.active {
+            color: #667eea;
+            border-color: #dee2e6 #dee2e6 #fff;
+        }
+        .nav-tabs .nav-link {
+            color: #6c757d;
+        }
+        .progress {
+            height: 6px;
+        }
+        .modal-content {
+            border-radius: 10px;
+        }
+        .contract-detail-item {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .contract-detail-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.25rem;
+        }
+        .contract-detail-value {
+            color: #212529;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        @media (max-width: 768px) {
+            .header-gradient {
+                padding: 1rem 0;
+            }
+            .kpi-number {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-gradient">
+        <div class="container">
+            <h1 class="text-center mb-0">雄安新兴戎利运管部智能台账仪表盘</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 搜索和筛选区域 -->
+        <div class="search-container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="filter-group">
+                        <label class="form-label">项目名称</label>
+                        <input type="text" class="form-control" id="projectNameFilter" placeholder="输入项目名称">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="filter-group">
+                        <label class="form-label">项目地点</label>
+                        <select class="form-select" id="locationFilter">
+                            <option value="">全部地点</option>
+                            <option value="河北省容城县">河北省容城县</option>
+                            <option value="河北雄安新区">河北雄安新区</option>
+                            <option value="北京市西城区">北京市西城区</option>
+                            <option value="北京市朝阳区">北京市朝阳区</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="filter-group">
+                        <label class="form-label">合同状态</label>
+                        <select class="form-select" id="statusFilter">
+                            <option value="">全部状态</option>
+                            <option value="执行中">执行中</option>
+                            <option value="已完结">已完结</option>
+                            <option value="待执行">待执行</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="filter-group">
+                        <label class="form-label">合同类型</label>
+                        <select class="form-select" id="contractTypeFilter">
+                            <option value="">全部类型</option>
+                            <option value="中标合同">中标合同</option>
+                            <option value="采购合同">采购合同</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-end">
+                    <button class="btn btn-primary" onclick="applyFilters()">
+                        <i class="bi bi-search"></i> 搜索
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearFilters()">
+                        <i class="bi bi-x-circle"></i> 清除
+                    </button>
+                    <button class="btn btn-success" onclick="exportToCSV()">
+                        <i class="bi bi-download"></i> 导出CSV
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI卡片 -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card kpi-card">
+                    <div class="kpi-number" id="totalContracts">0</div>
+                    <div class="kpi-label">总合同数</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card kpi-card">
+                    <div class="kpi-number" id="totalAmount">¥0</div>
+                    <div class="kpi-label">总金额</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card kpi-card">
+                    <div class="kpi-number" id="executingContracts">0</div>
+                    <div class="kpi-label">执行中合同</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card kpi-card">
+                    <div class="kpi-number" id="completionRate">0%</div>
+                    <div class="kpi-label">完结率</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图表区域 -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">合同状态分布</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="statusChart" class="chart-container"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">项目地点分布</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="locationChart" class="chart-container"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 合同列表 -->
+        <div class="row">
+            <div class="col-12">
+                <div class="table-container">
+                    <ul class="nav nav-tabs" id="contractTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="winning-tab" data-bs-toggle="tab" data-bs-target="#winning-contracts" type="button" role="tab">中标合同</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="purchase-tab" data-bs-toggle="tab" data-bs-target="#purchase-contracts" type="button" role="tab">采购合同</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="contractTabContent">
+                        <div class="tab-pane fade show active" id="winning-contracts" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="winningContractsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>项目名称</th>
+                                            <th>项目地点</th>
+                                            <th>合同金额</th>
+                                            <th>合同状态</th>
+                                            <th>开始日期</th>
+                                            <th>结束日期</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="winningContractsBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="purchase-contracts" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="purchaseContractsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>项目名称</th>
+                                            <th>项目地点</th>
+                                            <th>合同金额</th>
+                                            <th>合同状态</th>
+                                            <th>开始日期</th>
+                                            <th>结束日期</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="purchaseContractsBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 合同详情模态框 -->
+    <div class="modal fade" id="contractModal" tabindex="-1" aria-labelledby="contractModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contractModalLabel">合同详情</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="contractModalBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="downloadContractBtn" onclick="downloadContract()">
+                        <i class="bi bi-download"></i> 下载合同文件
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // 合同数据
+        const winningContractsData = [
+            {
+                id: 1,
+                name: "容城县中医医院物业服务采购合同",
+                amount: 1200000,
+                status: "执行中",
+                startDate: "2024-01-01",
+                endDate: "2024-12-31",
+                contractFile: "容城县中医医院物业服务采购合同.pdf",
+                location: "河北省容城县",
+                type: "中标合同"
+            },
+            {
+                id: 2,
+                name: "容城县中医医院物业服务采购合同(补充合同)",
+                amount: 150000,
+                status: "执行中",
+                startDate: "2024-06-01",
+                endDate: "2024-12-31",
+                contractFile: "《容城县中医医院物业服务采购合同》(补充合同).pdf",
+                location: "河北省容城县",
+                type: "中标合同"
+            },
+            {
+                id: 3,
+                name: "雄安体育中心(体育馆部分)承接查验服务合同",
+                amount: 800000,
+                status: "执行中",
+                startDate: "2024-03-01",
+                endDate: "2024-09-30",
+                contractFile: "雄安体育中心(体育馆部分)承接查验服务合同.pdf",
+                location: "河北省容城县",
+                type: "中标合同"
+            },
+            {
+                id: 7,
+                name: "北京大学人民医院雄安医工交叉转化研究院临时保安服务项目合同",
+                amount: 450000,
+                status: "已完结",
+                startDate: "2024-01-15",
+                endDate: "2024-06-15",
+                contractFile: "北京大学人民医院雄安医工交叉转化研究院临时保安服务项目合同.docx",
+                location: "河北雄安新区",
+                type: "中标合同"
+            },
+            {
+                id: 9,
+                name: "北京大学人民医院雄安院区生物样本库临时保安和物业保障项目服务合同",
+                amount: 680000,
+                status: "执行中",
+                startDate: "2024-04-01",
+                endDate: "2024-12-31",
+                contractFile: "北京大学人民医院雄安院区生物样本库临时保安和物业保障项目服务合同.docx",
+                location: "河北雄安新区",
+                type: "中标合同"
+            },
+            {
+                id: 10,
+                name: "北京大学人民医院雄安院区生物样本库临时物业保障项目服务合同",
+                amount: 320000,
+                status: "待执行",
+                startDate: "2024-07-01",
+                endDate: "2024-12-31",
+                contractFile: "北京大学人民医院雄安院区生物样本库临时物业保障项目服务合同.docx",
+                location: "河北雄安新区",
+                type: "中标合同"
+            },
+            {
+                id: 11,
+                name: "华北石油管理局总医院健康管理部增设医辅服务项目",
+                amount: 280000,
+                status: "执行中",
+                startDate: "2024-02-01",
+                endDate: "2024-08-31",
+                contractFile: "华北石油管理局总医院健康管理部增设医辅服务项目.PDF",
+                location: "河北省容城县",
+                type: "中标合同"
+            },
+            {
+                id: 12,
+                name: "北京中兴医院门诊综合楼物业服务采购项目",
+                amount: 950000,
+                status: "执行中",
+                startDate: "2024-03-15",
+                endDate: "2025-03-14",
+                contractFile: "北京中兴医院门诊综合楼物业服务采购项目.pdf",
+                location: "北京市西城区",
+                type: "中标合同"
+            },
+            {
+                id: 13,
+                name: "北京中兴医院门诊综合楼物业服务采购项目补充协议",
+                amount: 120000,
+                status: "执行中",
+                startDate: "2024-06-15",
+                endDate: "2025-03-14",
+                contractFile: "北京中兴医院门诊综合楼物业服务采购项目补充协议.docx",
+                location: "北京市西城区",
+                type: "中标合同"
+            },
+            {
+                id: 14,
+                name: "容西校园2025年物业服务采购项目合同",
+                amount: 1500000,
+                status: "待执行",
+                startDate: "2025-01-01",
+                endDate: "2025-12-31",
+                contractFile: "容西校园2025年物业服务采购项目合同.pdf",
+                location: "河北雄安新区",
+                type: "中标合同"
+            }
+        ];
+
+        const purchaseContractsData = [
+            {
+                id: 4,
+                name: "容城县中医医院项目保洁采购合同",
+                amount: 180000,
+                status: "执行中",
+                startDate: "2024-01-01",
+                endDate: "2024-12-31",
+                contractFile: "容城县中医医院项目保洁采购合同.pdf",
+                location: "河北省容城县",
+                type: "采购合同"
+            },
+            {
+                id: 5,
+                name: "容城县中医医院物业项目劳务服务采购合同",
+                amount: 420000,
+                status: "执行中",
+                startDate: "2024-01-01",
+                endDate: "2024-12-31",
+                contractFile: "容城县中医医院物业项目劳务服务采购合同.pdf",
+                location: "河北省容城县",
+                type: "采购合同"
+            },
+            {
+                id: 6,
+                name: "容城县中医医院保安及劳务服务应急采合同",
+                amount: 220000,
+                status: "执行中",
+                startDate: "2024-04-01",
+                endDate: "2024-12-31",
+                contractFile: "容城县中医医院保安及劳务服务应急采合同.pdf",
+                location: "河北省容城县",
+                type: "采购合同"
+            },
+            {
+                id: 8,
+                name: "容城县中医医院物业服务临时服务协议盖章版20241208-20241223",
+                amount: 35000,
+                status: "执行中",
+                startDate: "2024-12-08",
+                endDate: "2024-12-23",
+                contractFile: "容城县中医医院物业服务临时服务协议盖章版20241208-20241223.pdf",
+                location: "河北省容城县",
+                type: "采购合同"
+            },
+            {
+                id: 15,
+                name: "北京大学人民医院雄安院区生物样本库临时物业保障项目服务合同",
+                amount: 280000,
+                status: "执行中",
+                startDate: "2024-05-01",
+                endDate: "2024-11-30",
+                contractFile: "北京大学人民医院雄安院区生物样本库临时物业保障项目服务合同.PDF",
+                location: "河北雄安新区",
+                type: "采购合同"
+            },
+            {
+                id: 16,
+                name: "容西校园兴学幼儿园2025年物业服务采购合同",
+                amount: 320000,
+                status: "待执行",
+                startDate: "2025-01-01",
+                endDate: "2025-12-31",
+                contractFile: "容西校园兴学幼儿园2025年物业服务采购合同.pdf",
+                location: "河北雄安新区",
+                type: "采购合同"
+            },
+            {
+                id: 17,
+                name: "容西校园华兴初中2025年物业服务采购合同",
+                amount: 480000,
+                status: "待执行",
+                startDate: "2025-01-01",
+                endDate: "2025-12-31",
+                contractFile: "容西校园华兴初中2025年物业服务采购合同.pdf",
+                location: "河北雄安新区",
+                type: "采购合同"
+            },
+            {
+                id: 18,
+                name: "容西校园望泉小学2025年物业服务采购合同",
+                amount: 380000,
+                status: "待执行",
+                startDate: "2025-01-01",
+                endDate: "2025-12-31",
+                contractFile: "容西校园望泉小学2025年物业服务采购合同.pdf",
+                location: "河北雄安新区",
+                type: "采购合同"
+            },
+            {
+                id: 19,
+                name: "容西校园望泉小学、兴学幼儿园2025年物业服务应急采购合同",
+                amount: 85000,
+                status: "待执行",
+                startDate: "2024-12-01",
+                endDate: "2024-12-31",
+                contractFile: "容西校园望泉小学、兴学幼儿园2025年物业服务应急采购合同.pdf",
+                location: "河北雄安新区",
+                type: "采购合同"
+            },
+            {
+                id: 20,
+                name: "雄安体育中心临勤(河北城市发展生活服务有限公司)",
+                amount: 150000,
+                status: "执行中",
+                startDate: "2024-08-01",
+                endDate: "2024-10-31",
+                contractFile: "雄安体育中心临勤(河北城市发展生活服务有限公司).pdf",
+                location: "河北省容城县",
+                type: "采购合同"
+            },
+            {
+                id: 21,
+                name: "雄安体育中心临勤（石家庄保安服务集团有限公司河北雄安分公司）",
+                amount: 120000,
+                status: "执行中",
+                startDate: "2024-08-01",
+                endDate: "2024-10-31",
+                contractFile: "雄安体育中心临勤（石家庄保安服务集团有限公司河北雄安分公司）.pdf",
+                location: "河北省容城县",
+                type: "采购合同"
+            },
+            {
+                id: 22,
+                name: "雄安体育中心项目(体育场和游泳馆部分)2025年度物业服务标段一合同",
+                amount: 2800000,
+                status: "待执行",
+                startDate: "2025-01-01",
+                endDate: "2025-12-31",
+                contractFile: "雄安体育中心项目(体育场和游泳馆部分)2025年度物业服务标段一合同.pdf",
+                location: "河北省容城县",
+                type: "采购合同"
+            }
+        ];
+
+        let filteredWinningContracts = [...winningContractsData];
+        let filteredPurchaseContracts = [...purchaseContractsData];
+
+        // 格式化金额
+        function formatCurrency(amount) {
+            return '¥' + amount.toLocaleString('zh-CN');
+        }
+
+        // 获取状态颜色
+        const statusColors = {
+            '执行中': 'bg-warning text-dark',
+            '已完结': 'bg-success text-white',
+            '待执行': 'bg-secondary text-white'
+        };
+
+        // 渲染表格
+        function renderTables() {
+            renderWinningContracts();
+            renderPurchaseContracts();
+            updateKPIs();
+            renderCharts();
+        }
+
+        function renderWinningContracts() {
+            const tbody = document.getElementById('winningContractsBody');
+            tbody.innerHTML = '';
+
+            filteredWinningContracts.forEach(contract => {
+                let location = contract.location;
+                if (!location) {
+                    if (contract.name.includes('容城县中医医院')) {
+                        location = '河北省容城县';
+                    } else if (contract.name.includes('容城') || contract.name.includes('容西')) {
+                        location = '河北雄安新区';
+                    } else if (contract.name.includes('体育中心')) {
+                        location = '河北省容城县';
+                    } else if (contract.name.includes('北京')) {
+                        if (contract.name.includes('西城区')) location = '北京市西城区';
+                        else if (contract.name.includes('朝阳区')) location = '北京市朝阳区';
+                        else location = '北京市';
+                    } else if (contract.name.includes('雄安')) {
+                        location = '河北雄安新区';
+                    } else {
+                        location = '河北省容城县';
+                    }
+                }
+
+                const row = `
+                    <tr>
+                        <td><span class="contract-link" onclick="showContractDetail(${contract.id}, 'winning')">${contract.name}</span></td>
+                        <td>${location}</td>
+                        <td>${formatCurrency(contract.amount)}</td>
+                        <td><span class="status-badge ${statusColors[contract.status]}">${contract.status}</span></td>
+                        <td>${contract.startDate}</td>
+                        <td>${contract.endDate}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="showContractDetail(${contract.id}, 'winning')">
+                                <i class="bi bi-eye"></i> 详情
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function renderPurchaseContracts() {
+            const tbody = document.getElementById('purchaseContractsBody');
+            tbody.innerHTML = '';
+
+            filteredPurchaseContracts.forEach(contract => {
+                let location = contract.location;
+                if (!location) {
+                    if (contract.name.includes('容城县中医医院')) {
+                        location = '河北省容城县';
+                    } else if (contract.name.includes('体育中心')) {
+                        location = '河北省容城县';
+                    } else if (contract.name.includes('容西')) {
+                        location = '河北雄安新区';
+                    } else if (contract.name.includes('雄安')) {
+                        location = '河北雄安新区';
+                    } else {
+                        location = '河北省容城县';
+                    }
+                }
+
+                const row = `
+                    <tr>
+                        <td><span class="contract-link" onclick="showContractDetail(${contract.id}, 'purchase')">${contract.name}</span></td>
+                        <td>${location}</td>
+                        <td>${formatCurrency(contract.amount)}</td>
+                        <td><span class="status-badge ${statusColors[contract.status]}">${contract.status}</span></td>
+                        <td>${contract.startDate}</td>
+                        <td>${contract.endDate}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="showContractDetail(${contract.id}, 'purchase')">
+                                <i class="bi bi-eye"></i> 详情
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // 更新KPI指标
+        function updateKPIs() {
+            const allContracts = [...filteredWinningContracts, ...filteredPurchaseContracts];
+            
+            document.getElementById('totalContracts').textContent = allContracts.length;
+            document.getElementById('totalAmount').textContent = formatCurrency(
+                allContracts.reduce((sum, contract) => sum + contract.amount, 0)
+            );
+            document.getElementById('executingContracts').textContent = 
+                allContracts.filter(c => c.status === '执行中').length;
+            
+            const completedCount = allContracts.filter(c => c.status === '已完结').length;
+            const completionRate = allContracts.length > 0 ? 
+                Math.round((completedCount / allContracts.length) * 100) : 0;
+            document.getElementById('completionRate').textContent = completionRate + '%';
+        }
+
+        // 渲染图表
+        function renderCharts() {
+            const allContracts = [...filteredWinningContracts, ...filteredPurchaseContracts];
+            
+            // 状态分布图
+            const statusCounts = {};
+            allContracts.forEach(contract => {
+                statusCounts[contract.status] = (statusCounts[contract.status] || 0) + 1;
+            });
+
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(statusCounts),
+                    datasets: [{
+                        data: Object.values(statusCounts),
+                        backgroundColor: ['#ffc107', '#198754', '#6c757d']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // 地点分布图
+            const locationCounts = {};
+            allContracts.forEach(contract => {
+                let location = contract.location;
+                if (!location) {
+                    if (contract.name.includes('容城县中医医院')) {
+                        location = '河北省容城县';
+                    } else if (contract.name.includes('容城') || contract.name.includes('容西')) {
+                        location = '河北雄安新区';
+                    } else if (contract.name.includes('体育中心')) {
+                        location = '河北省容城县';
+                    } else if (contract.name.includes('北京')) {
+                        location = '北京市';
+                    } else if (contract.name.includes('雄安')) {
+                        location = '河北雄安新区';
+                    } else {
+                        location = '河北省容城县';
+                    }
+                }
+                locationCounts[location] = (locationCounts[location] || 0) + 1;
+            });
+
+            const locationCtx = document.getElementById('locationChart').getContext('2d');
+            new Chart(locationCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(locationCounts),
+                    datasets: [{
+                        label: '合同数量',
+                        data: Object.values(locationCounts),
+                        backgroundColor: '#667eea'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 显示合同详情
+        function showContractDetail(contractId, type) {
+            const contracts = type === 'winning' ? winningContractsData : purchaseContractsData;
+            const contract = contracts.find(c => c.id === contractId);
+            
+            if (contract) {
+                let location = contract.location;
+                if (!location) {
+                    if (type === 'winning') {
+                        if (contract.name.includes('容城县中医医院')) {
+                            location = '河北省容城县';
+                        } else if (contract.name.includes('容城') || contract.name.includes('容西')) {
+                            location = '河北雄安新区';
+                        } else if (contract.name.includes('体育中心')) {
+                            location = '河北省容城县';
+                        } else if (contract.name.includes('北京')) {
+                            if (contract.name.includes('西城区')) location = '北京市西城区';
+                            else if (contract.name.includes('朝阳区')) location = '北京市朝阳区';
+                            else location = '北京市';
+                        } else if (contract.name.includes('雄安')) {
+                            location = '河北雄安新区';
+                        } else {
+                            location = '河北省容城县';
+                        }
+                    } else {
+                        if (contract.name.includes('容城县中医医院')) {
+                            location = '河北省容城县';
+                        } else if (contract.name.includes('体育中心')) {
+                            location = '河北省容城县';
+                        } else if (contract.name.includes('容西')) {
+                            location = '河北雄安新区';
+                        } else if (contract.name.includes('雄安')) {
+                            location = '河北雄安新区';
+                        } else {
+                            location = '河北省容城县';
+                        }
+                    }
+                }
+
+                const modalBody = document.getElementById('contractModalBody');
+                modalBody.innerHTML = `
+                    <div class="contract-detail-item">
+                        <div class="contract-detail-label">项目名称</div>
+                        <div class="contract-detail-value">${contract.name}</div>
+                    </div>
+                    <div class="contract-detail-item">
+                        <div class="contract-detail-label">项目地点</div>
+                        <div class="contract-detail-value">${location}</div>
+                    </div>
+                    <div class="contract-detail-item">
+                        <div class="contract-detail-label">合同金额</div>
+                        <div class="contract-detail-value">${formatCurrency(contract.amount)}</div>
+                    </div>
+                    <div class="contract-detail-item">
+                        <div class="contract-detail-label">合同状态</div>
+                        <div class="contract-detail-value">
+                            <span class="status-badge ${statusColors[contract.status]}">${contract.status}</span>
+                        </div>
+                    </div>
+                    <div class="contract-detail-item">
+                        <div class="contract-detail-label">开始日期</div>
+                        <div class="contract-detail-value">${contract.startDate}</div>
+                    </div>
+                    <div class="contract-detail-item">
+                        <div class="contract-detail-label">结束日期</div>
+                        <div class="contract-detail-value">${contract.endDate}</div>
+                    </div>
+                    <div class="contract-detail-item">
+                        <div class="contract-detail-label">合同文件</div>
+                        <div class="contract-detail-value">${contract.contractFile}</div>
+                    </div>
+                `;
+
+                document.getElementById('downloadContractBtn').onclick = () => downloadContract(contract.contractFile);
+                
+                const modal = new bootstrap.Modal(document.getElementById('contractModal'));
+                modal.show();
+            }
+        }
+
+        // 下载合同文件
+        function downloadContract(filename) {
+            // 这里应该实现实际的文件下载逻辑
+            alert(`正在下载: ${filename}`);
+        }
+
+        // 应用筛选
+        function applyFilters() {
+            const nameFilter = document.getElementById('projectNameFilter').value.toLowerCase();
+            const locationFilter = document.getElementById('locationFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            filteredWinningContracts = winningContractsData.filter(contract => {
+                let location = contract.location;
+                if (!location) {
+                    if (contract.name.includes('容城县中医医院')) {
+                        location = '河北省容城县';
+                    } else if (contract.name.includes('容城') || contract.name.includes('容西')) {
+                        location = '河北雄安新区';
+                    } else if (contract.name.includes('体育中心')) {
+                        location = '河北省容城县';
+                    } else if (contract.name.includes('北京')) {
+                        location = '北京市';
+                    } else if (contract.name.includes('雄安')) {
+                        location = '河北雄安新区';
+                    } else {
+                        location = '河北省容城县';
+                    }
+                }
+
+                return (!nameFilter || contract.name.toLowerCase().includes(nameFilter)) &&
+                       (!locationFilter || location === locationFilter) &&
+                       (!statusFilter || contract.status === statusFilter);
+            });
+
+            filteredPurchaseContracts = purchaseContractsData.filter(contract => {
+                let location = contract.location;
+                if (!location) {
+                    if (contract.name.includes('容城县中医医院')) {
+                        location = '河北省容城县';
+                    } else if (contract.name.includes('体育中心')) {
+                        location = '河北省容城县';
+                    } else if (contract.name.includes('容西')) {
+                        location = '河北雄安新区';
+                    } else if (contract.name.includes('雄安')) {
+                        location = '河北雄安新区';
+                    } else {
+                        location = '河北省容城县';
+                    }
+                }
+
+                return (!nameFilter || contract.name.toLowerCase().includes(nameFilter)) &&
+                       (!locationFilter || location === locationFilter) &&
+                       (!statusFilter || contract.status === statusFilter);
+            });
+
+            renderTables();
+        }
+
+        // 清除筛选
+        function clearFilters() {
+            document.getElementById('projectNameFilter').value = '';
+            document.getElementById('locationFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            
+            filteredWinningContracts = [...winningContractsData];
+            filteredPurchaseContracts = [...purchaseContractsData];
+            
+            renderTables();
+        }
+
+        // 导出CSV
+        function exportToCSV() {
+            const allContracts = [...filteredWinningContracts, ...filteredPurchaseContracts];
+            let csv = '\uFEFF项目名称,项目地点,合同金额,合同状态,开始日期,结束日期,合同类型\n';
+            
+            allContracts.forEach(contract => {
+                let location = contract.location;
+                if (!location) {
+                    if (contract.name.includes('容城县中医医院')) {
+                        location = '河北省容城县';
+                    } else if (contract.type === '中标合同') {
+                        if (contract.name.includes('容城') || contract.name.includes('容西')) {
+                            location = '河北雄安新区';
+                        } else if (contract.name.includes('体育中心')) {
+                            location = '河北省容城县';
+                        } else if (contract.name.includes('北京')) {
+                            location = '北京市';
+                        } else if (contract.name.includes('雄安')) {
+                            location = '河北雄安新区';
+                        } else {
+                            location = '河北省容城县';
+                        }
+                    } else {
+                        if (contract.name.includes('容城县中医医院')) {
+                            location = '河北省容城县';
+                        } else if (contract.name.includes('体育中心')) {
+                            location = '河北省容城县';
+                        } else if (contract.name.includes('容西')) {
+                            location = '河北雄安新区';
+                        } else if (contract.name.includes('雄安')) {
+                            location = '河北雄安新区';
+                        } else {
+                            location = '河北省容城县';
+                        }
+                    }
+                }
+                
+                csv += `"${contract.name}","${location}","${formatCurrency(contract.amount)}","${contract.status}","${contract.startDate}","${contract.endDate}","${contract.type}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = '合同台账_' + new Date().toISOString().slice(0, 10) + '.csv';
+            link.click();
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTables();
+        });
+    </script>
+</body>
+</html>

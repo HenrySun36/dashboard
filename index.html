@@ -76,8 +76,9 @@
         }
         .contract-table {
             width: 100%;
-            table-layout: fixed;
+            table-layout: auto;
             border-collapse: collapse;
+            min-width: 1600px;
         }
         .contract-table th {
             text-align: left;
@@ -101,16 +102,16 @@
             background-color: #f8fafc;
         }
         .col-name {
-            width: 28%;
-            min-width: 180px;
+            width: 22%;
+            min-width: 160px;
         }
         .col-partner {
-            width: 22%;
-            min-width: 150px;
+            width: 18%;
+            min-width: 140px;
         }
         .col-amount {
-            width: 12%;
-            min-width: 100px;
+            width: 10%;
+            min-width: 90px;
         }
         thead .col-amount {
             text-align: left;
@@ -119,24 +120,28 @@
             text-align: left;
         }
         .col-location {
-            width: 14%;
-            min-width: 120px;
+            width: 12%;
+            min-width: 110px;
+        }
+        .col-area {
+            width: 8%;
+            min-width: 85px;
         }
         .col-date {
-            width: 10%;
-            min-width: 90px;
+            width: 9%;
+            min-width: 85px;
         }
         .col-status {
-            width: 8%;
-            min-width: 80px;
+            width: 7%;
+            min-width: 75px;
         }
         .col-progress {
-            width: 12%;
-            min-width: 120px;
+            width: 10%;
+            min-width: 100px;
         }
         .col-invoice {
-            width: 8%;
-            min-width: 80px;
+            width: 7%;
+            min-width: 75px;
         }
         .col-manager {
             width: 8%;
@@ -144,6 +149,12 @@
         }
         .container {
             max-width: 1200px;
+        }
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
         }
 
     </style>
@@ -213,44 +224,66 @@
 
     <script>
         const winningContractsData = [
-            { id: 1, name: '容城县中医医院物业服务采购合同', client: '容城县中医院', amount: 7695520, type: '医疗康养类', signDate: '2024-12-24', endDate: '2027-12-23', received: 3500000, invoiceStatus: '已开部分', status: '执行中', manager: '宋来庆' },
-            { id: 2, name: '容城县中医医院物业服务采购合同补充协议', client: '容城县中医院', amount: 114007.7, type: '医疗康养类', signDate: '2024-12-24', endDate: '2027-12-23', received: 0, invoiceStatus: '未开', status: '执行中', manager: '宋来庆' },
-            { id: 3, name: '弥渡好来世纪广场2栋物业委托服务合同', client: '中国新兴建设开发有限责任公司', amount: 645538.08, type: '住宅类', signDate: '2024-11-13', endDate: '2027-7-31', received: 600000, invoiceStatus: '已开部分', status: '执行中', manager: '王燕飚' },
-            { id: 4, name: '容东安兴社区服务中心入室保洁服务合同', client: '中国雄安集团公共服务管理有限公司', amount: 8320, type: '公共建筑类', signDate: '2024-12-20', endDate: '2025-9-20', received: 0, invoiceStatus: '未开', status: '未开始', manager: '张三' },
-            { id: 5, name: '雄安体育中心项目（体育馆部分）承接查验服务合同', client: '雄安体育中心运营管理有限公司', amount: 716876, type: '公共建筑类', signDate: '2025-2-21', endDate: '2025-3-31', received: 716876, invoiceStatus: '已开完', status: '已完结', manager: '牛自航' },
-            { id: 6, name: '北京中兴医院门诊综合楼物业服务采购项目合同', client: '北京中兴医院', amount: 1403000, type: '医疗康养类', signDate: '2025-2-24', endDate: '2027-2-28', received: 100000, invoiceStatus: '未开', status: '执行中', manager: '王五' },
-            { id: 7, name: '老山西街10号院8、9、10号楼物业管理服务合同', client: '老山西街10号院全体业主', amount: 1900000, type: '住宅类', signDate: '2025-2-1', endDate: '2028-1-31', received: 0, invoiceStatus: '未开', status: '未开始', manager: '王五' },
-            { id: 8, name: '容西学校2025年物业服务采购项目合同', client: '容城县教育局', amount: 2436243.84, type: '公共建筑类', signDate: '2025-2-21', endDate: '2026-2-20', received: 2436243.84, invoiceStatus: '已开完', status: '已归档', manager: '何向东' },
-            { id: 9, name: '弥渡好来世纪广场2栋屋顶检修合同', client: '中国新兴建设开发有限责任公司', amount: 280000, type: '其它', signDate: '2025-4-17', endDate: '2027-7-31', received: 0, invoiceStatus: '未开', status: '未开始', manager: '王燕飚' },
-            { id: 10, name: '弥渡好来世纪广场2栋消防设施设备维修合同', client: '中国新兴建设开发有限责任公司', amount: 28726.82, type: '其它', signDate: '2025-4-17', endDate: '2025-5-17', received: 28726.82, invoiceStatus: '已开完', status: '已完结', manager: '王燕飚' },
-            { id: 11, name: '雄安体育中心项目承接查验服务合同（补充协议）', client: '雄安体育中心运营管理有限公司', amount: 512500, type: '公共建筑类', signDate: '2025-2-1', endDate: '2025-4-18', received: 0, invoiceStatus: '未开', status: '执行中', manager: '牛自航' },
-            { id: 12, name: '保定宝石花东方医院保洁服务外包合同', client: '保定宝石花东方医院', amount: 728794, type: '医疗康养类', signDate: '2025-6-15', endDate: '2026-6-14', received: 0, invoiceStatus: '未开', status: '未开始', manager: '许云舒' },
-            { id: 13, name: '雄安体育中心项目2025年度物业服务标段一合同', client: '通用技术集团物业管理有限公司', amount: 4435614.68, type: '公共建筑类', signDate: '2025-6-20', endDate: '2026-4-20', received: 0, invoiceStatus: '未开', status: '未开始', manager: '牛自航' },
-            { id: 14, name: '华北石油管理局总医院健康管理部增设医辅服务项目合同', client: '华北石油管理局总医院', amount: 474000, type: '医疗康养类', signDate: '2025-8-8', endDate: '2026-8-7', received: 0, invoiceStatus: '未开', status: '未开始', manager: '王新兰' },
+            { id: 1, name: '弥渡好来世纪广场2栋物业委托服务合同', client: '中国新兴建设开发有限责任公司', amount: 645538.08, type: '住宅类', signDate: '2024-8-1', endDate: '2027-7-31', received: 600000, invoiceStatus: '已开到2024年12月', status: '执行中', manager: '王燕飚' },
+            { id: 2, name: '容东兴安社区服务中心入室保洁服务合同', client: '中国雄安集团公共服务管理有限公司', amount: 8320, type: '公共建筑类', signDate: '2024-12-20', endDate: '2025-9-20', received: 0, invoiceStatus: '未开', status: '执行中', manager: '/', projectName: '容东兴安社区服务中心项目' },
+            { id: 3, name: '容城县中医医院物业服务采购合同', client: '容城县中医院', amount: 7695520, type: '医疗康养类', signDate: '2024-12-24', endDate: '2027-12-23', received: 3500000, invoiceStatus: '已开到2024年12月', status: '执行中', manager: '宋来庆' },
+            { id: 4, name: '容城县中医医院物业服务采购合同补充协议', client: '容城县中医院', amount: 114007.7, type: '医疗康养类', signDate: '2024-12-24', endDate: '2027-12-23', received: 0, invoiceStatus: '未开', status: '执行中', manager: '宋来庆' },
+            { id: 5, name: '老山西街10号院8、9、10号楼物业管理服务合同', client: '老山西街10号院全体业主', amount: 1900000, type: '住宅类', signDate: '2025-2-1', endDate: '2028-1-31', received: 0, invoiceStatus: '未开', status: '执行中', manager: '/' },
+            { id: 6, name: '雄安体育中心项目(体育馆部分)承接查验服务合同(补充协议)', client: '雄安体育中心运营管理有限公司', amount: 512500, type: '公共建筑类', signDate: '2025-3-14', endDate: '2025-3-31', received: 512500, invoiceStatus: '已开到2025年3月', status: '已完结', manager: '牛自航', projectName: '体育中心项目(体育馆部分)' },
+            { id: 7, name: '雄安体育中心项目(体育馆部分)承接查验服务合同', client: '雄安体育中心运营管理有限公司', amount: 716876, type: '公共建筑类', signDate: '2025-2-21', endDate: '2025-3-31', received: 716876, invoiceStatus: '已开到2025年3月', status: '已完结', manager: '牛自航', projectName: '体育中心项目(体育馆部分)' },
+            { id: 8, name: '容西校园2025年物业服务采购项目合同', client: '容城县教育局', amount: 2436243.84, type: '公共建筑类', signDate: '2025-2-21', endDate: '2026-2-20', received: 2436243.84, invoiceStatus: '已开到2025年2月', status: '已完结', manager: '何向东' },
+            { id: 9, name: '北京中兴医院门诊综合楼物业服务采购项目物业管理服务合同', client: '北京中兴医院', amount: 1403000, type: '医疗康养类', signDate: '2025-2-24', endDate: '2027-2-28', received: 100000, invoiceStatus: '未开', status: '执行中', manager: '/' },
+            { id: 10, name: '弥渡好来世纪广场2栋屋顶检修合同', client: '中国新兴建设开发有限责任公司', amount: 280000, type: '其它', signDate: '2025-4-17', endDate: '2027-7-31', received: 0, invoiceStatus: '未开', status: '执行中', manager: '王燕飚' },
+            { id: 11, name: '弥渡好来世纪广场2栋消防设施设备维修合同', client: '中国新兴建设开发有限责任公司', amount: 28726.62, type: '其它', signDate: '2025-4-17', endDate: '2025-5-17', received: 28726.62, invoiceStatus: '已开到2025年4月', status: '已完结', manager: '王燕飚' },
+            { id: 12, name: '保定宝石花东方医院保洁服务外包合同', client: '保定宝石花东方医院', amount: 728794, type: '医疗康养类', signDate: '2025-6-15', endDate: '2026-6-14', received: 0, invoiceStatus: '未开', status: '执行中', manager: ' tremend' },
+            { id: 13, name: '雄安体育中心项目2025年度物业服务标段一合同(体育场和游泳馆部分)', client: '通用技术集团物业管理有限公司', amount: 4435614.68, type: '公共建筑类', signDate: '2025-6-20', endDate: '2026-4-20', received: 0, invoiceStatus: '未开', status: '执行中', manager: '牛自航', projectName: '体育中心项目(体育场和游泳馆部分)' },
+            { id: 14, name: '雄安体育中心项目1741海岳后街临勤保洁及秩序维护服务合同(体育场和游泳馆部分)', client: '雄安体育中心运营管理有限公司', amount: 88500, type: '公共建筑类', signDate: '2025-7-4', endDate: '2025-7-22', received: 88500, invoiceStatus: '已开到2025年7月', status: '已完结', manager: '牛自航' },
+            { id: 15, name: '华北石油管理局总医院健康管理部增设医辅服务项目合同', client: '华北石油管理局总医院', amount: 474000, type: '医疗康养类', signDate: '2025-8-8', endDate: '2026-8-7', received: 0, invoiceStatus: '未开', status: '执行中', manager: '王新兰' },
         ];
 
         const procurementContractsData = [
-            { id: 1, name: '消防维保服务委托合同', supplier: '云南安高科技有限公司', amount: 31900, type: '其它', signDate: '2024-9-1', endDate: '2025-8-31', paid: 31900, invoiceStatus: '已收', status: '已完结', manager: '王燕飚', projectName: '弥渡好来世纪广场项目', unit: '新兴戎利', contractNo: 'XXRL-MDSC-WB-2024-01', location: '云南省弥渡县' },
-            { id: 2, name: '电梯维保项目服务委托合同', supplier: '云南奥菱电梯有限公司', amount: 66400, type: '其它', signDate: '2024-9-1', endDate: '2025-8-31', paid: 66400, invoiceStatus: '已收', status: '已完结', manager: '王燕飚', projectName: '弥渡好来世纪广场项目', unit: '新兴戎利', contractNo: 'XXRL-MD-2024-08', location: '云南省弥渡县' },
-            { id: 3, name: '劳务服务外包合同', supplier: '大理恒晟保安服务有限责任公司', amount: 198900, type: '住宅类', signDate: '2024-8-30', endDate: '2025-8-31', paid: 198900, invoiceStatus: '已收', status: '已完结', manager: '王燕飚', projectName: '弥渡好来世纪广场项目', unit: '新兴戎利', contractNo: 'XXRL-MDSC-FW-2024-01', location: '云南省弥渡县' },
-            { id: 4, name: '容城县中医医院保洁服务及劳务派遣服务项目服务协议', supplier: '容城县鑫三物业管理有限公司', amount: 320100, type: '医疗康养类', signDate: '2024-12-24', endDate: '2025-12-23', paid: 320100, invoiceStatus: '已收', status: '已完结', manager: '宋来庆', projectName: '容城中医医院项目', unit: '新兴戎利', contractNo: 'XXRL-RS-YJ-202412', location: '河北省容城县' },
-            { id: 5, name: '容城县中医医院保洁项目保洁服务合同', supplier: '容城县鑫三物业管理有限公司', amount: 3394800, type: '医疗康养类', signDate: '2024-12-24', endDate: '2027-12-23', paid: 1697400, invoiceStatus: '已收部分', status: '执行中', manager: '宋来庆', projectName: '容城中医医院项目', unit: '新兴戎利', contractNo: 'XXGG-BJ202412', location: '河北省容城县' },
-            { id: 6, name: '容城县中医医院物业服务临时协议', supplier: '容城县鑫三物业管理有限公司', amount: 107167.24, type: '医疗康养类', signDate: '2024-12-8', endDate: '2024-12-23', paid: 107167.24, invoiceStatus: '已收', status: '已完结', manager: '宋来庆', projectName: '容城中医医院项目', unit: '新兴戎利', contractNo: '/', location: '河北省容城县' },
-            { id: 7, name: '北京大学人民医院雄安院区生物样本库临时物业保障项目服务合同', supplier: '北京瑞成盛业物业管理有限公司', amount: 243156, type: '医疗康养类', signDate: '2025-1-15', endDate: '2025-7-15', paid: 121578, invoiceStatus: '已收部分', status: '执行中', manager: '孙七', projectName: '北京大学人民医院雄安院区生物样本库临时物业保障项目', unit: '新兴戎利', contractNo: 'XXRL-BR-YJC-202501-01', location: '河北省容城县' },
-            { id: 8, name: '容城县中医医院物业业务劳务派遣服务合同', supplier: '容城县星业人力资源服务有限公司', amount: 3518000, type: '医疗康养类', signDate: '2025-3-24', endDate: '2027-12-23', paid: 879500, invoiceStatus: '已收部分', status: '执行中', manager: '宋来庆', projectName: '容城中医医院', unit: '新兴戎利', contractNo: '2025-XXRL-RCYZ-FW-001', location: '河北省容城县' },
-            { id: 9, name: '雄安体育中心项目（体育馆部分）承接查验服务合同', supplier: '北京瑞成盛业物业管理有限公司', amount: 643085.92, type: '公共建筑类', signDate: '2025-2-21', endDate: '2025-3-31', paid: 643085.92, invoiceStatus: '已收', status: '已完结', manager: '牛自航', projectName: '雄安体育中心项目', unit: '新兴戎利', contractNo: '2025-XXRL-TYZY-FW-004', location: '河北省容城县' },
-            { id: 10, name: '容西校园望泉小学、兴学幼儿园2025年物业服务采购合同', supplier: '宸宜（天津）物业管理有限公司', amount: 118444.82, type: '公共建筑类', signDate: '2025-2-21', endDate: '2025-2-20', paid: 118444.82, invoiceStatus: '已收', status: '已完结', manager: '何向东', projectName: '容西学校项目', unit: '新兴戎利', contractNo: '2025-XXRL-RCXX-FW-005', location: '河北省容城县' },
-            { id: 11, name: '容西校园华兴初中2025年物业服务采购合同', supplier: '宸宜（天津）物业管理有限公司', amount: 820002.6, type: '公共建筑类', signDate: '2025-2-21', endDate: '2026-2-20', paid: 410001.3, invoiceStatus: '已收部分', status: '执行中', manager: '何向东', projectName: '容西学校项目', unit: '新兴戎利', contractNo: '2025-XXRL-RCXX-FW-004', location: '河北省容城县' },
-            { id: 12, name: '容西校园望泉小学2025年物业服务采购合同', supplier: '宸宜（天津）物业管理有限公司', amount: 747993.91, type: '公共建筑类', signDate: '2025-2-21', endDate: '2026-2-20', paid: 373996.96, invoiceStatus: '已收部分', status: '执行中', manager: '何向东', projectName: '容西学校项目', unit: '新兴戎利', contractNo: '2025-XXRL-RCXX-FW-003', location: '河北省容城县' },
-            { id: 13, name: '容西校园兴学幼儿园2025年物业服务采购合同', supplier: '河北雄安九力人力资源管理有限公司', amount: 550498, type: '公共建筑类', signDate: '2025-3-21', endDate: '2026-2-20', paid: 275249, invoiceStatus: '已收部分', status: '执行中', manager: '何向东', projectName: '容西学校项目', unit: '新兴戎利', contractNo: '2025-XXRL-RCXX-FW-002', location: '河北省容城县' },
-            { id: 14, name: '非居民垃圾收运处置服务合同', supplier: '中国雄安集团生态建设投资有限公司', amount: 240102.5, type: '公共建筑类', signDate: '2025-3-28', endDate: '2025-6-30', paid: 240102.5, invoiceStatus: '已收', status: '已完结', manager: '牛自航', projectName: '雄安体育中心项目', unit: '新兴戎利', contractNo: 'XAQT-QT-2025-0154', location: '河北省容城县' },
-            { id: 15, name: '写字楼租赁合同', supplier: '河北雄安商务服务中心有限公司', amount: 1770207.26, type: '公共建筑类', signDate: '2025-4-1', endDate: '2026-3-31', paid: 885103.63, invoiceStatus: '已收部分', status: '执行中', manager: '吴九', projectName: '雄安商务服务中心项目', unit: '新兴戎利', contractNo: 'CSFZ-ZL-001-0018-XZL-2025-01', location: '河北省容城县' },
-            { id: 16, name: '物业服务协议', supplier: '河北雄安城市发展生活服务有限公司', amount: 1381417.2, type: '公共建筑类', signDate: '2025-4-1', endDate: '2026-3-31', paid: 690708.6, invoiceStatus: '已收部分', status: '执行中', manager: '孙七', projectName: '雄安商务服务中心项目', unit: '新兴戎利', contractNo: 'CSFZ-FW-2025-0019-GF-XXRL', location: '河北省容城县' },
-            { id: 17, name: '雄安体育中心临勤服务合同', supplier: '河北雄安城市发展生活服务有限公司', amount: 176840, type: '公共建筑类', signDate: '2025-3-21', endDate: '2025-4-1', paid: 176840, invoiceStatus: '已收', status: '已完结', manager: '牛自航', projectName: '雄安体育中心项目', unit: '新兴戎利', contractNo: '2025-XXRL-TYZY-FW-006-01', location: '河北省容城县' },
-            { id: 18, name: '雄安体育中心临勤服务合同', supplier: '石家庄保安服务集团有限公司河北雄安分公司', amount: 96000, type: '公共建筑类', signDate: '2025-3-21', endDate: '2025-4-1', paid: 96000, invoiceStatus: '已收', status: '已完结', manager: '牛自航', projectName: '雄安体育中心项目', unit: '新兴戎利', contractNo: '2025-XXRL-RCXX-FW-006-02', location: '河北省容城县' },
-            { id: 19, name: '雄安体育中心项目承接查验服务合同（补充协议）', supplier: '北京瑞成盛业物业管理有限公司', amount: 501200, type: '公共建筑类', signDate: '2025-2-1', endDate: '2025-4-18', paid: 501200, invoiceStatus: '已收', status: '已完结', manager: '牛自航', projectName: '雄安体育中心项目', unit: '新兴戎利', contractNo: '2025-XXRL-TYZY-FW-004-01', location: '河北省容城县' },
-            { id: 20, name: '雄安体育中心项目(体育场和游泳馆部分)2025年度物业服务标段一合同', supplier: '北京瑞成盛业物业管理有限公司', amount: 2190000, type: '公共建筑类', signDate: '2025-7-22', endDate: '2026-4-20', paid: 425000, invoiceStatus: '已收部分', status: '执行中', manager: '牛自航', projectName: '雄安体育中心项目', unit: '新兴戎利', contractNo: '2025-XXRL-TYZY-FW-008', location: '河北省容城县' },
+            { id: 1, name: '弥渡县好来世纪广场2栋劳务服务外包合同', supplier: '大理志昂保安服务有限责任公司', amount: 199800, type: '住宅类', signDate: '2024-8-30', endDate: '2025-8-31', paid: 199800, invoiceStatus: '已收到2024年8月', status: '已完结', manager: '王燕飚', projectName: '弥渡好来世纪广场2栋项目', unit: '新兴戎利', contractNo: 'XARL-MDSC-FW-2024-01', location: '云南省弥渡县' },
+            { id: 2, name: '弥渡县好来世纪广场2栋消防维保服务委托合同', supplier: '云南安垒科技有限公司', amount: 31900, type: '其它', signDate: '2024-9-1', endDate: '2025-8-31', paid: 31900, invoiceStatus: '已收到2024年9月', status: '已完结', manager: '王燕飚', projectName: '弥渡好来世纪广场2栋项目', unit: '新兴戎利', contractNo: 'XARL-MDSC-WB-2024-01', location: '云南省弥渡县' },
+            { id: 3, name: '弥渡县好来世纪广场2栋电梯维保项目服务委托合同', supplier: '云南通奥电梯有限公司', amount: 68400, type: '其它', signDate: '2024-9-1', endDate: '2025-8-31', paid: 68400, invoiceStatus: '已收到2024年9月', status: '已完结', manager: '王燕飚', projectName: '弥渡好来世纪广场2栋项目', unit: '新兴戎利', contractNo: 'XAXX-MD-2024-08', location: '云南省弥渡县' },
+            { id: 4, name: '容城县中医医院物业服务临时服务协议', supplier: '容城县鑫三物业管理有限公司', amount: 107167.24, type: '医疗康养类', signDate: '2024-12-8', endDate: '2024-12-23', paid: 107167.24, invoiceStatus: '已收到2024年12月', status: '已完结', manager: '宋来庆', projectName: '容城中医医院项目', unit: '新兴戎利', contractNo: '/', location: '河北省容城县' },
+            { id: 5, name: '容城县中医医院项目保安及劳务服务应急采购合同', supplier: '容城县鑫三物业管理有限公司', amount: 320100, type: '医疗康养类', signDate: '2024-12-24', endDate: '2025-3-23', paid: 320100, invoiceStatus: '已收到2024年12月', status: '已完结', manager: '宋来庆', projectName: '容城中医医院项目', unit: '新兴戎利', contractNo: 'XXRL-XS-YJCG-202412', location: '河北省容城县' },
+            { id: 6, name: '容城县中医医院项目保洁采购合同', supplier: '容城县鑫三物业管理有限公司', amount: 3394800, type: '医疗康养类', signDate: '2024-12-24', endDate: '2027-12-23', paid: 1697400, invoiceStatus: '已收到2024年12月', status: '执行中', manager: '宋来庆', projectName: '容城中医医院项目', unit: '新兴戎利', contractNo: 'XXCG-BJ202412', location: '河北省容城县' },
+            { id: 7, name: '北京大学人民医院雄安院区生物样本库临时物业保障项目服务合同', supplier: '北京瑞成盛世物业管理有限公司', amount: 243156, type: '医疗康养类', signDate: '2025-1-15', endDate: '2025-7-15', paid: 121578, invoiceStatus: '已收到2025年1月', status: '执行中', manager: '/', projectName: '北京大学人民医院雄安院区生物样本库临时物业保障项目', unit: '新兴戎利', contractNo: '2025-XXRL-SWYBK-FW-007', location: '河北省容城县' },
+            { id: 8, name: '雄安体育中心项目(体育馆部分)承接查验服务合同(补充协议)', supplier: '北京瑞成盛世物业管理有限公司', amount: 501200, type: '公共建筑类', signDate: '2025-3-14', endDate: '2025-3-31', paid: 501200, invoiceStatus: '已收到2025年3月', status: '已完结', manager: '牛自航', projectName: '体育中心项目(体育馆部分)', unit: '新兴戎利', contractNo: '2025-XXRL-TYZX-FW-005-01', location: '河北省容城县' },
+            { id: 9, name: '雄安体育中心项目(体育馆部分)承接查验服务合同', supplier: '北京瑞成盛世物业管理有限公司', amount: 643085.92, type: '公共建筑类', signDate: '2025-2-21', endDate: '2025-3-31', paid: 643085.92, invoiceStatus: '已收到2025年2月', status: '已完结', manager: '牛自航', projectName: '体育中心项目(体育馆部分)', unit: '新兴戎利', contractNo: '2025-XXRL-TYZX-FW-004', location: '河北省容城县' },
+            { id: 10, name: '容西校园望泉小学、兴学幼儿园2025年物业服务应急采购合同', supplier: '家臣(天津)物业管理有限公司', amount: 118444.82, type: '公共建筑类', signDate: '2025-2-21', endDate: '2025-3-20', paid: 118444.82, invoiceStatus: '已收到2025年2月', status: '已完结', manager: '何向东', projectName: '容西学校项目', unit: '新兴戎利', contractNo: '2025-XXRL-RXXY-FW-005', location: '河北省容城县' },
+            { id: 11, name: '容西校园华兴初中2025年物业服务采购合同', supplier: '家臣(天津)物业管理有限公司', amount: 820002.6, type: '公共建筑类', signDate: '2025-2-21', endDate: '2026-2-20', paid: 410001.3, invoiceStatus: '已收到2025年2月', status: '执行中', manager: '何向东', projectName: '容西学校项目', unit: '新兴戎利', contractNo: '2025-XXRL-RXXY-FW-004', location: '河北省容城县' },
+            { id: 12, name: '容西校园望泉小学2025年物业服务采购合同', supplier: '家臣(天津)物业管理有限公司', amount: 747993.91, type: '公共建筑类', signDate: '2025-3-21', endDate: '2026-2-20', paid: 373996.96, invoiceStatus: '已收到2025年3月', status: '执行中', manager: '何向东', projectName: '容西学校项目', unit: '新兴戎利', contractNo: '2025-XXRL-RXXY-FW-003', location: '河北省容城县' },
+            { id: 13, name: '容西校园兴学幼儿园2025年物业服务采购合同', supplier: '河北雄安九众人力资源管理有限公司', amount: 550498, type: '公共建筑类', signDate: '2025-3-21', endDate: '2026-2-20', paid: 275249, invoiceStatus: '已收到2025年3月', status: '执行中', manager: '何向东', projectName: '容西学校项目', unit: '新兴戎利', contractNo: '2025-XXRL-RXXY-FW-002', location: '河北省容城县' },
+            { id: 14, name: '容城县中医医院物业项目劳务服务采购合同', supplier: '容城县星业人力资源服务有限公司', amount: 3518000, type: '医疗康养类', signDate: '2025-3-24', endDate: '2027-3-23', paid: 879500, invoiceStatus: '已收到2025年3月', status: '执行中', manager: '宋来庆', projectName: '容城中医医院', unit: '新兴戎利', contractNo: '2025-XXRL-RCZY-FW-001', location: '河北省容城县' },
+            { id: 15, name: '非居民垃圾收运处置服务合同', supplier: '中国雄安集团生态建设投资有限公司', amount: 240102.5, type: '公共建筑类', signDate: '2025-3-28', endDate: '2025-6-30', paid: 240102.5, invoiceStatus: '已收到2025年3月', status: '已完结', manager: '牛自航', projectName: '体育中心项目(体育场和游泳馆部分)', unit: '新兴戎利', contractNo: 'XAST-QT-2025-0154', location: '河北省容城县' },
+            { id: 16, name: '写字楼租赁合同', supplier: '河北雄安商务服务中心有限公司', amount: 1770207.26, type: '公共建筑类', signDate: '2025-4-1', endDate: '2028-3-31', paid: 885103.63, invoiceStatus: '已收到2025年4月', status: '执行中', manager: '/', projectName: '雄安商务服务中心项目', unit: '新兴戎利', contractNo: 'CSFZ-ZL-2025-0018-XZL-001-001', location: '河北省容城县' },
+            { id: 17, name: '物业服务协议', supplier: '河北雄安城市发展生活服务有限公司', amount: 1381417.2, type: '公共建筑类', signDate: '2025-4-1', endDate: '2028-3-31', paid: 690708.6, invoiceStatus: '已收到2025年4月', status: '执行中', manager: '/', projectName: '雄安商务服务中心项目', unit: '新兴戎利', contractNo: 'CSFZ-FW-2025-0019-SF-002-001', location: '河北省容城县' },
+            { id: 18, name: '雄安体育中心临勤服务合同(体育馆部分)', supplier: '河北雄安城市发展生活服务有限公司', amount: 176840, type: '公共建筑类', signDate: '2025-3-21', endDate: '2025-4-1', paid: 176840, invoiceStatus: '已收到2025年3月', status: '已完结', manager: '牛自航', projectName: '体育中心项目(体育馆部分)', unit: '新兴戎利', contractNo: '2025-XXRL-SWYBK-FW-006-01', location: '河北省容城县' },
+            { id: 19, name: '雄安体育中心临勤服务合同(体育馆部分)', supplier: '石家庄保安集团有限公司河北雄安分公司', amount: 96000, type: '公共建筑类', signDate: '2025-3-21', endDate: '2025-4-1', paid: 96000, invoiceStatus: '已收到2025年3月', status: '已完结', manager: '牛自航', projectName: '体育中心项目(体育馆部分)', unit: '新兴戎利', contractNo: '2025-XXRL-SWYBK-FW-006-02', location: '河北省容城县' },
+            { id: 20, name: '雄安体育中心项目(体育场和游泳馆部分)2025年度物业服务应急采购合同', supplier: '北京瑞成盛世物业管理有限公司', amount: 845595.93, type: '公共建筑类', signDate: '2025-4-18', endDate: '2026-7-21', paid: 425000, invoiceStatus: '已收到2025年4月', status: '执行中', manager: '牛自航', projectName: '体育中心项目(体育场和游泳馆部分)', unit: '新兴戎利', contractNo: '2025-XXRL-TYZX-FW-009', location: '河北省容城县' },
+            { id: 21, name: '雄安体育中心项目(体育场和游泳馆部分)2025年度物业服务标段一合同', supplier: '北京瑞成盛世物业管理有限公司', amount: 2190000, type: '公共建筑类', signDate: '2025-7-22', endDate: '2026-4-20', paid: 425000, invoiceStatus: '已收到2025年7月', status: '执行中', manager: '牛自航', projectName: '体育中心项目(体育场和游泳馆部分)', unit: '新兴戎利', contractNo: '2025-XXRL-TYZX-FW-008', location: '河北省容城县' },
+            { id: 22, name: '华北石油管理局总医院健康管理部增设医辅服务项目合同', supplier: '河南玖邻好生活服务有限公司雄安分公司', amount: 436080, type: '医疗康养类', signDate: '2025-8-8', endDate: '2026-8-7', paid: 0, invoiceStatus: '未收', status: '执行中', manager: '王新兰', projectName: '华北石油管理局总医院项目', unit: '新兴戎利', contractNo: '2025-XXRL-HBZYY-FW-010', location: '河北省任丘市' },
+            { id: 23, name: '容东兴安社区服务中心入室保洁服务合同', supplier: '容城县鑫三物业管理有限公司', amount: 5220, type: '公共建筑类', signDate: '2024-12-20', endDate: '2025-9-20', paid: 3000, invoiceStatus: '已收到2024年12月', status: '执行中', manager: '/', projectName: '容东兴安社区服务中心项目', unit: '新兴戎利', contractNo: '2025-XXRL-RDSQ-FW-005', location: '河北省容城县' },
         ];
+
+        // 服务面积映射数据（根据项目明细Excel中的建筑面积）
+        const serviceAreaMap = {
+            '弥渡好来世纪广场项目': 22000,
+            '弥渡好来世纪广场2栋项目': 22000,
+            '容城县中医医院项目': 24000,
+            '容城中医医院项目': 24000,
+            '北京中兴医院门诊综合楼物业服务采购项目物业管理服务合同': 8472,
+            '老山西街10号院8、9、10号楼物业管理服务项目': 17939.28,
+            '容西学校项目': 62684,
+            '体育中心项目(体育馆部分)': 64641,
+            '体育中心项目(体育场和游泳馆部分)': 120582,
+            '北京大学人民医院雄安院区生物样本库临时物业保障项目': 24000,
+            '保定宝石花东方医院保洁业务外包项目': 27000,
+            '华北石油管理局总医院项目': 1500,
+            '雄安商务服务中心项目': 74175.79,
+            '容东兴安社区服务中心项目': 430
+        };
 
         let currentView = 'winning';
         let typeChart = null;
@@ -292,12 +325,14 @@
             const completionRate = totalAmount > 0 ? (totalPaidReceived / totalAmount * 100).toFixed(1) : 0;
 
             const kpiTitle1 = isWinning ? '已收账款总额' : '已付账款总额';
-            const kpiTitle2 = isWinning ? '履约率' : '履约率';
-            const kpiTitle3 = isWinning ? '中标合同总额' : '采购合同总额';
+            const kpiTitle2 = isWinning ? '履约进度' : '履约进度';
+            const kpiTitle3 = '合同总额';
             
+
+
             const tableHeaders = isWinning 
-                  ? ['合同名称', '委托方', '项目地点', '合同签订日期', '合同到期日期', '合同状态', '含税金额', '已收款', '履约进度', '开票情况', '项目负责人']
-                  : ['合同名称', '供应商', '含税金额', '项目地点', '合同签订日期', '合同到期日期', '合同状态', '已付款', '履约进度', '发票情况', '项目负责人'];
+                  ? ['合同名称', '委托方', '项目地点', '服务面积(m²)', '合同签订日期', '合同到期日期', '合同状态', '含税金额', '已收款', '履约进度', '开票情况', '项目负责人']
+                  : ['合同名称', '供应商', '含税金额', '项目地点', '服务面积(m²)', '合同签订日期', '合同到期日期', '合同状态', '已付款', '履约进度', '发票情况', '项目负责人'];
 
             const tableRows = filteredData.map(item => {
             const progress = item[amountKey] > 0 ? (item[paidReceivedKey] / item[amountKey] * 100) : 0;
@@ -316,29 +351,45 @@
                 else location = '河北省容城县';
             }
             
+            // 获取服务面积
+            const getServiceArea = (projectName, itemName) => {
+                // 优先使用映射表
+                if (serviceAreaMap[projectName]) {
+                    return serviceAreaMap[projectName];
+                }
+                
+                // 根据合同名称判断
+                if (itemName.includes('弥渡')) return 22000;
+                if (itemName.includes('容城县中医医院') || itemName.includes('容城中医医院')) return 24000;
+                if (itemName.includes('北京中兴医院')) return 8472;
+                if (itemName.includes('老山西街')) return 17939.28;
+                if (itemName.includes('容西校园') || itemName.includes('容西学校')) return 62684;
+                if (itemName.includes('体育中心项目(体育馆部分)')) return 64641;
+                if (itemName.includes('体育中心项目(体育场和游泳馆部分)')) return 120582;
+                if (itemName.includes('雄安体育中心') && itemName.includes('体育馆部分')) return 64641;
+                if (itemName.includes('雄安体育中心') && itemName.includes('体育场和游泳馆部分')) return 120582;
+                if (itemName.includes('北京大学人民医院')) return 24000;
+                if (itemName.includes('宝石花东方医院')) return 27000;
+                if (itemName.includes('华北石油管理局总医院')) return 1500;
+                if (itemName.includes('雄安商务服务中心')) return 74175.79;
+                
+                return '-';
+            };
+            
+            const serviceArea = getServiceArea(item.projectName, item.name);
+            
             return `
                 <tr class="border-b border-slate-200 hover:bg-slate-50">
                     ${isWinning ? `
                     <td class="col-name p-3 font-medium text-slate-900 cursor-pointer hover:text-blue-600" data-id="${item.id}" data-type="winning">${item.name}</td>
                     <td class="col-partner p-3 text-slate-600">${item[partnerKey]}</td>
                     <td class="col-location p-3 text-slate-600">${location}</td>
+                    <td class="col-area p-3 text-slate-600">${serviceArea === '-' ? '-' : serviceArea.toLocaleString()}</td>
                     <td class="col-date p-3 text-slate-600">${item.signDate}</td>
                     <td class="col-date p-3 text-slate-600">${item.endDate}</td>
-                    ` : `
-                    <td class="col-name p-3 font-medium text-slate-900 cursor-pointer hover:text-blue-600" data-id="${item.id}" data-type="procurement">${item.name}</td>
-                    <td class="col-partner p-3 text-slate-600">${item[partnerKey]}</td>
-                    <td class="col-amount p-3">${formatCurrency(item.amount)}</td>
-                    <td class="col-location p-3 text-slate-600">${item.location || '河北省容城县'}</td>
-                    <td class="col-date p-3 text-slate-600">${item.signDate}</td>
-                    <td class="col-date p-3 text-slate-600">${item.endDate || '-'}</td>
-                    `}
                     <td class="col-status p-3"><span class="badge ${statusColors[item.status] || ''}">${item.status}</span></td>
-                    ${isWinning ? `
                     <td class="col-amount p-3">${formatCurrency(item.amount)}</td>
                     <td class="col-amount p-3 text-green-600">${formatCurrency(item[paidReceivedKey])}</td>
-                    ` : `
-                    <td class="col-amount p-3 text-green-600">${formatCurrency(item[paidReceivedKey])}</td>
-                    `}
                     <td class="col-progress p-3">
                         <div class="flex items-center">
                             <div class="w-full progress-bar-bg mr-2">
@@ -349,6 +400,27 @@
                     </td>
                     <td class="col-invoice p-3"><span class="badge ${invoiceColors[item.invoiceStatus] || ''}">${item.invoiceStatus}</span></td>
                     <td class="col-manager p-3 text-slate-600">${item.manager}</td>
+                    ` : `
+                    <td class="col-name p-3 font-medium text-slate-900 cursor-pointer hover:text-blue-600" data-id="${item.id}" data-type="procurement">${item.name}</td>
+                    <td class="col-partner p-3 text-slate-600">${item[partnerKey]}</td>
+                    <td class="col-amount p-3">${formatCurrency(item.amount)}</td>
+                    <td class="col-location p-3 text-slate-600">${item.location || '河北省容城县'}</td>
+                    <td class="col-area p-3 text-slate-600">${serviceArea === '-' ? '-' : serviceArea.toLocaleString()}</td>
+                    <td class="col-date p-3 text-slate-600">${item.signDate}</td>
+                    <td class="col-date p-3 text-slate-600">${item.endDate || '-'}</td>
+                    <td class="col-status p-3"><span class="badge ${statusColors[item.status] || ''}">${item.status}</span></td>
+                    <td class="col-amount p-3 text-green-600">${formatCurrency(item[paidReceivedKey])}</td>
+                    <td class="col-progress p-3">
+                        <div class="flex items-center">
+                            <div class="w-full progress-bar-bg mr-2">
+                                <div class="progress-bar-fg bg-gray-500 h-2" style="width: ${progress}%;"></div>
+                            </div>
+                            <span class="text-xs font-semibold">${progress.toFixed(0)}%</span>
+                        </div>
+                    </td>
+                    <td class="col-invoice p-3"><span class="badge ${invoiceColors[item.invoiceStatus] || ''}">${item.invoiceStatus}</span></td>
+                    <td class="col-manager p-3 text-slate-600">${item.manager}</td>
+                    `}
                 </tr>
             `;
         }).join('');
@@ -385,39 +457,41 @@
                 <section class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
                      <h3 class="text-lg font-semibold mb-1 text-slate-700">合同明细列表</h3>
                      <p class="text-sm text-slate-500 mb-4">所有合同的详细执行情况</p>
-                    <div class="overflow-x-auto" style="border-radius: 0.5rem; border: 1px solid #e2e8f0;">
-                        <table class="contract-table">
+                    <div class="table-responsive" style="border-radius: 0.5rem; border: 1px solid #e2e8f0;">
+                        <table class="contract-table" style="min-width: 1600px;">
                             <thead class="bg-slate-50 text-xs text-slate-700 uppercase">
                                 <tr>
                                     ${isWinning ? 
-                                        `<th class="col-name">${tableHeaders[0]}</th>
-                                        <th class="col-partner">${tableHeaders[1]}</th>
-                                        <th class="col-location">${tableHeaders[2]}</th>
-                                        <th class="col-date">${tableHeaders[3]}</th>
-                                        <th class="col-date">${tableHeaders[4]}</th>
-                                        <th class="col-status">${tableHeaders[5]}</th>
-                                        <th class="col-amount">${tableHeaders[6]}</th>
-                                        <th class="col-amount">${tableHeaders[7]}</th>
-                                        <th class="col-progress">${tableHeaders[8]}</th>
-                                        <th class="col-invoice">${tableHeaders[9]}</th>
-                                        <th class="col-manager">${tableHeaders[10]}</th>` 
+                                        `<th class="col-name" style="width: 200px;">${tableHeaders[0]}</th>
+                                        <th class="col-partner" style="width: 120px;">${tableHeaders[1]}</th>
+                                        <th class="col-location" style="width: 100px;">${tableHeaders[2]}</th>
+                                        <th class="col-area" style="width: 80px;">${tableHeaders[3]}</th>
+                                        <th class="col-date" style="width: 100px;">${tableHeaders[4]}</th>
+                                        <th class="col-date" style="width: 100px;">${tableHeaders[5]}</th>
+                                        <th class="col-status" style="width: 80px;">${tableHeaders[6]}</th>
+                                        <th class="col-amount" style="width: 100px;">${tableHeaders[7]}</th>
+                                        <th class="col-amount" style="width: 100px;">${tableHeaders[8]}</th>
+                                        <th class="col-progress" style="width: 120px;">${tableHeaders[9]}</th>
+                                        <th class="col-invoice" style="width: 80px;">${tableHeaders[10]}</th>
+                                        <th class="col-manager" style="width: 80px;">${tableHeaders[11]}</th>` 
                                         : 
-                                        `<th class="col-name">${tableHeaders[0]}</th>
-                                        <th class="col-partner">${tableHeaders[1]}</th>
-                                        <th class="col-amount">${tableHeaders[2]}</th>
-                                        <th class="col-location">${tableHeaders[3]}</th>
-                                        <th class="col-date">${tableHeaders[4]}</th>
-                                        <th class="col-date">${tableHeaders[5]}</th>
-                                        <th class="col-status">${tableHeaders[6]}</th>
-                                        <th class="col-amount">${tableHeaders[7]}</th>
-                                        <th class="col-progress">${tableHeaders[8]}</th>
-                                        <th class="col-invoice">${tableHeaders[9]}</th>
-                                        <th class="col-manager">${tableHeaders[10]}</th>`
+                                        `<th class="col-name" style="width: 200px;">${tableHeaders[0]}</th>
+                                        <th class="col-partner" style="width: 120px;">${tableHeaders[1]}</th>
+                                        <th class="col-amount" style="width: 100px;">${tableHeaders[2]}</th>
+                                        <th class="col-location" style="width: 100px;">${tableHeaders[3]}</th>
+                                        <th class="col-area" style="width: 80px;">${tableHeaders[4]}</th>
+                                        <th class="col-date" style="width: 100px;">${tableHeaders[5]}</th>
+                                        <th class="col-date" style="width: 100px;">${tableHeaders[6]}</th>
+                                        <th class="col-status" style="width: 80px;">${tableHeaders[7]}</th>
+                                        <th class="col-amount" style="width: 100px;">${tableHeaders[8]}</th>
+                                        <th class="col-progress" style="width: 120px;">${tableHeaders[9]}</th>
+                                        <th class="col-invoice" style="width: 80px;">${tableHeaders[10]}</th>
+                                        <th class="col-manager" style="width: 80px;">${tableHeaders[11]}</th>`
                                     }
                                 </tr>
                             </thead>
                             <tbody>
-                                ${tableRows || '<tr><td colspan="11" class="text-center py-8 text-slate-500">暂无数据</td></tr>'}
+                                ${tableRows || '<tr><td colspan="12" class="text-center py-8 text-slate-500">暂无数据</td></tr>'}
                             </tbody>
                         </table>
                     </div>
@@ -435,10 +509,33 @@
             const partnerKey = isWinning ? 'client' : 'supplier';
             const paidReceivedKey = isWinning ? 'received' : 'paid';
             
+            // 获取服务面积函数
+            const getServiceArea = (projectName, itemName) => {
+                if (serviceAreaMap[projectName]) {
+                    return serviceAreaMap[projectName];
+                }
+                
+                if (itemName.includes('弥渡')) return 22000;
+                if (itemName.includes('容城县中医医院') || itemName.includes('容城中医医院')) return 24000;
+                if (itemName.includes('北京中兴医院')) return 8472;
+                if (itemName.includes('老山西街')) return 17939.28;
+                if (itemName.includes('容西校园') || itemName.includes('容西学校')) return 62684;
+                if (itemName.includes('体育中心项目(体育馆部分)')) return 64641;
+                if (itemName.includes('体育中心项目(体育场和游泳馆部分)')) return 120582;
+                if (itemName.includes('雄安体育中心') && itemName.includes('体育馆部分')) return 64641;
+                if (itemName.includes('雄安体育中心') && itemName.includes('体育场和游泳馆部分')) return 120582;
+                if (itemName.includes('北京大学人民医院')) return 24000;
+                if (itemName.includes('宝石花东方医院')) return 27000;
+                if (itemName.includes('华北石油管理局总医院')) return 1500;
+                if (itemName.includes('雄安商务服务中心')) return 74175.79;
+                
+                return '-';
+            };
+            
             // 确定CSV列标题和对应的数据字段
             const headers = isWinning ? 
-                ['合同名称', '委托方', '项目地点', '签订日期', '结束日期', '状态', '合同金额', '已收款', '完成度', '发票状态', '项目经理', '类型'] : 
-                ['合同名称', '供应商', '合同金额', '项目地点', '签订日期', '结束日期', '状态', '已付款', '完成度', '发票状态', '项目经理', '类型'];
+                ['合同名称', '委托方', '项目地点', '服务面积(m²)', '签订日期', '结束日期', '状态', '合同金额', '已收款', '完成度', '发票状态', '项目经理', '类型'] : 
+                ['合同名称', '供应商', '合同金额', '项目地点', '服务面积(m²)', '签订日期', '结束日期', '状态', '已付款', '完成度', '发票状态', '项目经理', '类型'];
             
             // 准备CSV内容，添加BOM以确保中文显示正常
             let csvContent = '\ufeff' + headers.join(',') + '\n';
@@ -447,12 +544,14 @@
             filteredData.forEach(item => {
                 const location = item.location || '河北省容城县';
                 const progress = Math.round((item[paidReceivedKey] || 0) / item.amount * 100);
+                const serviceArea = getServiceArea(item.projectName, item.name);
                 
                 const row = isWinning ? 
                     [
                         `"${item.name}"`,
                         `"${item[partnerKey]}"`,
                         `"${location}"`,
+                        serviceArea === '-' ? '-' : serviceArea.toString(),
                         item.signDate,
                         item.endDate,
                         `"${item.status}"`,
@@ -468,6 +567,7 @@
                         `"${item[partnerKey]}"`,
                         item.amount,
                         `"${location}"`,
+                        serviceArea === '-' ? '-' : serviceArea.toString(),
                         item.signDate,
                         item.endDate || '-',
                         `"${item.status}"`,
@@ -934,4 +1034,3 @@
     </script>
 </body>
 </html>
-
